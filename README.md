@@ -3,6 +3,7 @@
 This project allows the user to input three points and visualize the triangle, including its angles.
 
 ## Method
+- Built using Django for the backend to handle form input and render templates.
 - The triangle is drawn using HTML Canvas and JavaScript for simple and accurate rendering.
 - Angles are calculated in Python using the Law of Cosines and converted to degrees.
 
