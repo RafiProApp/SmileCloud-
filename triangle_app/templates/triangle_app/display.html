@@ -1,0 +1,81 @@
+<h2>תצוגת המשולש</h2>
+
+<div>
+  <canvas id="triangleCanvas" width="800" height="800" style="border:1px solid black;"></canvas>
+</div>
+
+<p>זוויות:</p>
+<ul>
+  <li>A = {{ angles.A }}°</li>
+  <li>B = {{ angles.B }}°</li>
+  <li>C = {{ angles.C }}°</li>
+</ul>
+
+<script>
+const canvas = document.getElementById("triangleCanvas");
+const ctx = canvas.getContext("2d");
+
+const points = JSON.parse('{{ points_json|escapejs }}');
+const angles = JSON.parse('{{ angles_json|escapejs }}');
+
+const p1 = points.p1;
+const p2 = points.p2;
+const p3 = points.p3;
+
+function drawTriangle(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = 'blue';
+    ctx.fillStyle = 'red';
+
+    ctx.beginPath();
+    ctx.moveTo(p1[0], p1[1]);
+    ctx.lineTo(p2[0], p2[1]);
+    ctx.lineTo(p3[0], p3[1]);
+    ctx.closePath();
+    ctx.stroke();
+
+    [p1,p2,p3].forEach(p=>{
+        ctx.beginPath();
+        ctx.arc(p[0], p[1], 5, 0, 2*Math.PI);
+        ctx.fill();
+    });
+}
+
+function drawAngleArc(A, B, C, radius, label){
+    const [ax, ay] = A;
+    const [bx, by] = B;
+    const [cx, cy] = C;
+
+    let a1 = Math.atan2(by - ay, bx - ax);
+    let a2 = Math.atan2(cy - ay, cx - ax);
+
+    let start = a1, end = a2;
+    let delta = end - start;
+    while (delta <= -Math.PI) delta += 2*Math.PI;
+    while (delta >  Math.PI) delta -= 2*Math.PI;
+    if (delta < 0){ [start,end] = [end,start]; delta = -delta; }
+
+    ctx.beginPath();
+    ctx.arc(ax, ay, radius, start, end);
+    ctx.stroke();
+
+    const mid = start + delta/2;
+    const lx = ax + (radius+18)*Math.cos(mid);
+    const ly = ay + (radius+18)*Math.sin(mid);
+    ctx.font = '14px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(label, lx, ly);
+}
+
+function drawAll(){
+    drawTriangle();
+    const baseRadius = 28;
+    drawAngleArc(p1,p2,p3,baseRadius, `${angles.A}°`);
+    drawAngleArc(p2,p1,p3,baseRadius, `${angles.B}°`);
+    drawAngleArc(p3,p1,p2,baseRadius, `${angles.C}°`);
+}
+
+drawAll();
+</script>

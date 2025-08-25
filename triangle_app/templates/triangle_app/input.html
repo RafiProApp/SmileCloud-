@@ -1,0 +1,6 @@
+<h2>הזן נקודות ליצירת משולש</h2>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">הצג משולש</button>
+</form>
