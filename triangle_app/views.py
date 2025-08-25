@@ -19,7 +19,6 @@ def input_view(request):
     return render(request, "triangle_app/input.html", {"form": form})
 
 def angle(a, b, c):
-    """ מחשב זווית בעזרת משפט הקוסינוסים """
     ab = math.dist(a, b)
     bc = math.dist(b, c)
     ca = math.dist(c, a)
